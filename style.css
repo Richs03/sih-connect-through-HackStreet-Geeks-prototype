@@ -1,0 +1,290 @@
+/* --- Global Styles --- */
+body {
+    /* Modern, clean font */
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f7f9; /* Light background for a clean feel */
+    color: #333;
+}
+
+h1 {
+    color: #1a237e; /* Deep indigo for prominence */
+    border-bottom: 2px solid #e0e0e0;
+    padding-bottom: 15px;
+    margin-bottom: 30px;
+    font-size: 2em;
+    font-weight: 700;
+}
+
+h2 {
+    color: #37474f; /* Dark slate gray */
+    margin-top: 30px;
+    font-size: 1.5em;
+    font-weight: 600;
+}
+
+/* --- Dashboard Layout (Flexbox) --- */
+.dashboard-container {
+    display: flex; 
+    min-height: 100vh;
+}
+
+.sidebar {
+    width: 280px;
+    background-color: #1a237e; /* Professional dark blue */
+    color: white;
+    padding: 20px 0;
+    display: flex;
+    flex-direction: column; 
+    box-shadow: 4px 0 10px rgba(0, 0, 0, 0.15); /* Subtle side shadow */
+    transition: width 0.3s;
+}
+
+.main-content {
+    flex-grow: 1; 
+    padding: 30px;
+    overflow-y: auto; /* Allows scrolling if content overflows */
+}
+
+/* --- Sidebar Styling --- */
+.logo {
+    font-size: 1.9em;
+    font-weight: 900;
+    text-align: center;
+    margin-bottom: 40px;
+    color: #ffc107; /* Pop of yellow/gold for the brand name */
+}
+
+.sidebar nav ul {
+    list-style: none;
+    padding: 0;
+}
+
+.sidebar nav li a {
+    display: block;
+    padding: 15px 30px;
+    text-decoration: none;
+    color: #bbdefb; /* Light blue text */
+    transition: background-color 0.3s, color 0.3s;
+    font-weight: 500;
+}
+
+.sidebar nav li a:hover,
+.sidebar nav li.active a {
+    background-color: #3949ab; /* Slightly lighter blue on hover */
+    color: white;
+    border-left: 6px solid #ffc107; /* Highlight with brand color */
+    padding-left: 24px;
+}
+
+.profile-summary {
+    padding: 20px;
+    border-top: 1px solid #3f51b5;
+    margin-top: auto; 
+    text-align: center;
+}
+
+.status-badge {
+    background-color: #ef5350; /* Red for urgent status */
+    color: white;
+    padding: 8px;
+    border-radius: 6px;
+    font-size: 0.9em;
+    margin-top: 10px;
+    display: inline-block;
+}
+
+/* --- General Card & Button Styling --- */
+.card {
+    background-color: white;
+    padding: 25px;
+    border-radius: 12px; /* Smooth rounded corners */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    margin-bottom: 25px;
+    transition: transform 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-2px); /* Slight lift on hover */
+}
+
+.btn {
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.3s, box-shadow 0.3s;
+    margin-right: 10px;
+}
+
+.btn-primary {
+    background-color: #43a047; /* Professional green */
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #388e3c;
+    box-shadow: 0 4px 8px rgba(67, 160, 71, 0.4);
+}
+
+.btn-secondary {
+    background-color: #e0e0e0;
+    color: #37474f;
+}
+
+.btn-secondary:hover {
+    background-color: #bdbdbd;
+}
+
+/* Profile Card specific buttons */
+.profile-btn {
+    margin-top: 20px;
+}
+
+/* --- Opportunities Grid (Uses Flexbox for clean rows) --- */
+.opportunities-grid {
+    display: flex;
+    gap: 30px;
+    margin-bottom: 30px;
+    flex-wrap: wrap; 
+}
+
+.job-card {
+    flex: 1 1 350px; 
+    background-color: #fcfcfc;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    border-top: 5px solid #ffc107; /* Highlight top border with brand color */
+}
+
+.job-card h3 {
+    color: #1a237e;
+    font-size: 1.3em;
+    margin-top: 0;
+}
+
+.match-criteria {
+    font-style: italic;
+    color: #4caf50; /* Green for a match signal */
+    font-weight: 600;
+    padding: 5px 0;
+    margin-bottom: 15px;
+}
+
+.btn-apply {
+    background-color: #ffc107; /* Use brand color for CTA */
+    color: #1a237e;
+    margin-top: 15px;
+    width: 100%;
+    font-size: 1.1em;
+}
+
+.btn-apply:hover {
+    background-color: #ffb300;
+}
+
+/* --- Application Tracking Styling (Clarity is key here) --- */
+.application-tracking {
+    background-color: white;
+    border-radius: 12px;
+    padding: 10px 25px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.tracking-item {
+    padding: 18px 0;
+    border-bottom: 1px solid #eeeeee;
+    display: flex;
+    justify-content: space-between; 
+    align-items: center;
+    font-size: 1.05em;
+}
+
+.tracking-item:last-child {
+    border-bottom: none;
+}
+
+.status {
+    padding: 7px 15px;
+    border-radius: 20px; 
+    font-weight: bold;
+    font-size: 0.9em;
+    min-width: 150px;
+    text-align: center;
+}
+
+/* Color-coded Status Tags */
+.status-approved {
+    background-color: #e8f5e9; /* Light green */
+    color: #2e7d32; /* Dark green text */
+}
+
+.status-scheduled {
+    background-color: #fff8e1; /* Light yellow */
+    color: #fbc02d; /* Dark yellow text */
+}
+
+.status-pending {
+    background-color: #e3f2fd; /* Light blue */
+    color: #1565c0; /* Dark blue text */
+}
+
+.updated-stamp {
+    font-size: 0.85em;
+    color: #78909c;
+    margin-top: 10px;
+}
+
+/* --- Mobile Responsiveness (Crucial for SIH demo) --- */
+@media (max-width: 900px) {
+    .dashboard-container {
+        flex-direction: column; /* Stacks the sidebar and content vertically */
+    }
+
+    .sidebar {
+        width: 100%; /* Sidebar takes full width */
+        height: auto;
+        padding: 10px 0;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    
+    .sidebar nav ul {
+        display: flex;
+        flex-wrap: wrap; /* Allows menu items to wrap */
+        justify-content: center;
+    }
+
+    .sidebar nav li a {
+        padding: 10px 15px;
+        border-left: none !important;
+    }
+    
+    .profile-summary {
+        display: none; /* Hide for space on mobile */
+    }
+
+    .main-content {
+        padding: 20px;
+    }
+
+    .opportunities-grid {
+        gap: 15px;
+    }
+    
+    .job-card {
+        flex: 1 1 100%; /* Cards take full width */
+    }
+
+    .tracking-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .status {
+        margin-top: 10px;
+        min-width: 100px;
+    }
+}
