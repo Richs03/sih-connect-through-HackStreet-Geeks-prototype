@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connect | Student Career Dashboard</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --color-primary: #10B981; /* Emerald-500 */
+            --color-secondary: #3B82F6; /* Blue-500 */
+            --color-warning: #F59E0B; /* Amber-500 */
+            --color-danger: #EF4444; /* Red-500 */
+            --color-info: #6366F1; /* Indigo-500 */
+            --bg-dark: #1F2937;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F3F4F6;
+            min-height: 100vh;
+            margin: 0;
+            display: flex;
+        }
+        
+        /* Dashboard Layout */
+        .dashboard-container {
+            display: flex;
+            width: 100%;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: 280px;
+            background-color: var(--bg-dark);
+            color: white;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: width 0.3s ease;
+        }
+
+        .logo {
+            font-size: 1.25rem;
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 2rem;
+            color: var(--color-primary);
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+        }
+
+        .user-profile {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1rem;
+            border-radius: 0.5rem;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .avatar {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            margin-bottom: 0.5rem;
+            border: 3px solid var(--color-primary);
+            object-fit: cover;
+        }
+
+        .username {
+            display: block;
+            font-size: 1.125rem;
+            font-weight: 600;
+        }
+
+        .user-details {
+            font-size: 0.875rem;
+            color: #D1D5DB;
+        }
+
+        .nav-menu .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            color: #D1D5DB; /* Gray-300 */
+            text-decoration: none;
+            border-radius: 0.375rem;
+            transition: background-color 0.2s, color 0.2s;
+        }
+
+        .nav-menu .nav-item.active {
+            background-color: var(--color-primary);
+            color: white;
+            font-weight: 600;
+        }
+
+        .nav-menu .nav-item:not(.active):hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+        
+        .nav-menu .nav-item i {
+            margin-right: 0.75rem;
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            flex-grow: 1;
+            padding: 2rem;
+            overflow-y: auto;
+        }
+
+        .card {
+            background-color: white;
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            border: 1px solid #E5E7EB;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1F2937;
+            margin-bottom: 1.5rem;
+            border-left: 4px solid var(--color-secondary);
+            padding-left: 0.75rem;
+            line-height: 1;
+        }
+
+        /* Responsive Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        /* Skill Gap Card */
+        .skill-gap-list li {
+            padding: 0.5rem 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px dashed #E5E7EB;
+        }
+
+        .skill-gap-list li:last-child {
+            border-bottom: none;
+        }
+
+        .progress-bar-container {
+            width: 60%;
+            background-color: #E5E7EB;
+            border-radius: 9999px;
+            overflow: hidden;
+            height: 8px;
+        }
+        .progress-bar {
+            height: 8px;
+            border-radius: 9999px;
+        }
+
+        .skill-name {
+            font-weight: 600;
+            color: #1F2937;
+        }
+
+        .skill-percentage {
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+
+        .btn-action {
+            padding: 0.6rem 1.25rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            transition: background-color 0.2s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background-color: var(--color-primary);
+            color: white;
+        }
+        .btn-primary:hover {
+            background-color: #059669; /* Emerald-600 */
+        }
+        
+        .btn-secondary {
+            background-color: var(--color-secondary);
+            color: white;
+        }
+        .btn-secondary:hover {
+            background-color: #2563EB; /* Blue-600 */
+        }
+
+        /* Timeline/Applications */
+        .timeline-item {
+            display: flex;
+            margin-bottom: 1.5rem;
+        }
+        .timeline-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--color-primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            margin-right: 1rem;
+            position: relative;
+            z-index: 10;
+            box-shadow: 0 0 0 4px #F3F4F6;
+        }
+        .timeline-content {
+            flex-grow: 1;
+            padding: 0.75rem 1rem;
+            background: #F9FAFB;
+            border-radius: 0.5rem;
+            border-left: 4px solid var(--color-primary);
+            position: relative;
+        }
+        .timeline-content::before {
+            content: '';
+            position: absolute;
+            width: 2px;
+            background-color: #D1D5DB;
+            top: 40px;
+            bottom: -1.5rem;
+            left: -20px;
+            z-index: 5;
+        }
+        .timeline-item:last-child .timeline-content::before {
+            display: none;
+        }
+        .timeline-date {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--color-secondary);
+            margin-bottom: 0.25rem;
+        }
+        .timeline-title {
+            font-weight: 700;
+            color: #1F2937;
+        }
+        .timeline-status {
+            font-size: 0.8rem;
+            margin-top: 0.5rem;
+        }
+
+        /* Notifications */
+        .notification-list {
+            list-style: none;
+            padding: 0;
+        }
+        .notification-item {
+            display: flex;
+            align-items: flex-start;
+            padding: 1rem;
+            border-bottom: 1px solid #F3F4F6;
+        }
+        .notification-item:last-child {
+            border-bottom: none;
+        }
+        .notif-icon {
+            font-size: 1.25rem;
+            margin-right: 1rem;
+            flex-shrink: 0;
+            padding-top: 0.2rem;
+        }
+        .notif-content {
+            flex-grow: 1;
+        }
+        .notif-content h4 {
+            font-weight: 600;
+            margin: 0;
+        }
+        .notif-content p {
+            font-size: 0.875rem;
+            color: #4B5563;
+            margin-top: 0.25rem;
+        }
+        .notif-date {
+            font-size: 0.75rem;
+            color: #9CA3AF;
+            margin-top: 0.5rem;
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                padding: 1rem;
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+            }
+            .user-profile {
+                background: none;
+                padding: 0;
+                margin-bottom: 0;
+                text-align: left;
+                display: flex;
+                align-items: center;
+            }
+            .avatar {
+                width: 40px;
+                height: 40px;
+                margin-right: 0.5rem;
+                margin-bottom: 0;
+            }
+            .username {
+                font-size: 1rem;
+                display: block;
+            }
+            .user-details {
+                display: none; /* Hide for mobile compactness */
+            }
+            .logo {
+                display: none;
+            }
+            .nav-menu {
+                display: none; /* Hide navigation links on small screens */
+            }
+            .dashboard-container {
+                flex-direction: column;
+            }
+            .main-content {
+                padding: 1rem;
+            }
+            .section-title {
+                margin-bottom: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="logo hidden sm:block">
+                Connect <br> through HackStreet Geeks
+            </div>
+
+            <div class="user-profile">
+                <!-- Avatar with initial 'R' for Riya Saha -->
+                <img src="https://placehold.co/64x64/10B981/FFFFFF?text=R" alt="Student Avatar" class="avatar">
+                <div>
+                    <span class="username">Riya Saha</span>
+                    <span class="user-details block">CS Final Year | GPA 8.7</span>
+                </div>
+            </div>
+
+            <!-- Navigation Links -->
+            <div class="nav-menu hidden sm:block">
+                <a href="#" class="nav-item active">
+                    <i class="fas fa-chart-line"></i> Dashboard
+                </a>
+                <a href="#" class="nav-item">
+                    <i class="fas fa-graduation-cap"></i> Skill Gap
+                </a>
+                <a href="#" class="nav-item">
+                    <i class="fas fa-briefcase"></i> Applications (3)
+                </a>
+                <a href="#" class="nav-item">
+                    <i class="fas fa-bell"></i> Notifications (5)
+                </a>
+                <a href="#" class="nav-item">
+                    <i class="fas fa-book"></i> Resources
+                </a>
+                <a href="admin_and_mentor.html" class="nav-item mt-4">
+                    <i class="fas fa-user-shield"></i> Admin/Mentor Portal
+                </a>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Explicit Welcome Message -->
+            <h1 style="font-size: 2.25rem; font-weight: 800; color: #1F2937; margin-bottom: 1.5rem;">
+                Welcome back, Saha!
+            </h1>
+
+            <div class="stats-grid">
+                <!-- Stat Card 1: Skill Score -->
+                <div class="card p-4 text-center border-l-4 border-l-green-500">
+                    <h3 class="text-gray-500 font-semibold mb-1">Overall Skill Score</h3>
+                    <p class="text-4xl font-extrabold text-green-600">89%</p>
+                    <p class="text-xs text-gray-400 mt-1">Target: 95% for Tier 1</p>
+                </div>
+                <!-- Stat Card 2: Applications -->
+                <div class="card p-4 text-center border-l-4 border-l-blue-500">
+                    <h3 class="text-gray-500 font-semibold mb-1">Mentor Verified Applications</h3>
+                    <p class="text-4xl font-extrabold text-blue-600">3 / 5</p>
+                    <p class="text-xs text-gray-400 mt-1">Pending approval: 2</p>
+                </div>
+                <!-- Stat Card 3: New Opportunities -->
+                <div class="card p-4 text-center border-l-4 border-l-amber-500">
+                    <h3 class="text-gray-500 font-semibold mb-1">Relevant Opportunities</h3>
+                    <p class="text-4xl font-extrabold text-amber-600">12</p>
+                    <p class="text-xs text-gray-400 mt-1">Posted in the last 7 days</p>
+                </div>
+            </div>
+            
+            <!-- --- Skill Gap Analysis and Recommendations --- -->
+            <h2 class="section-title">Personalized Skill Gap Analysis</h2>
+            <div class="card mb-8">
+                <div class="flex flex-col md:flex-row gap-6">
+                    <!-- Left: Skills List -->
+                    <div class="md:w-1/2">
+                        <ul class="skill-gap-list">
+                            <li>
+                                <span class="skill-name">DSA & Algorithms</span>
+                                <div class="progress-bar-container">
+                                    <div class="progress-bar bg-green-500" style="width: 90%;"></div>
+                                </div>
+                                <span class="skill-percentage text-green-600">90%</span>
+                            </li>
+                            <li>
+                                <span class="skill-name">Cloud Computing (AWS)</span>
+                                <div class="progress-bar-container">
+                                    <div class="progress-bar bg-yellow-500" style="width: 75%;"></div>
+                                </div>
+                                <span class="skill-percentage text-yellow-600">75%</span>
+                            </li>
+                            <li>
+                                <span class="skill-name">Advanced JavaScript</span>
+                                <div class="progress-bar-container">
+                                    <div class="progress-bar bg-red-500" style="width: 55%;"></div>
+                                </div>
+                                <span class="skill-percentage text-red-600">55%</span>
+                            </li>
+                            <li>
+                                <span class="skill-name">System Design</span>
+                                <div class="progress-bar-container">
+                                    <div class="progress-bar bg-green-500" style="width: 85%;"></div>
+                                </div>
+                                <span class="skill-percentage text-green-600">85%</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <!-- Right: Recommendations -->
+                    <div class="md:w-1/2 bg-indigo-50 p-4 rounded-lg border border-indigo-200">
+                        <h3 class="text-indigo-700 font-bold mb-3 flex items-center"><i class="fas fa-cogs mr-2"></i> Action Plan</h3>
+                        <p class="text-sm text-indigo-600 mb-4">
+                            Your **Advanced JavaScript** score is a potential bottleneck. Focus on asynchronous patterns and state management to align with Full Stack roles.
+                        </p>
+                        <a href="#" class="btn-action btn-secondary text-sm">
+                            <i class="fas fa-rocket mr-2"></i> Start JS Refresher Module
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Column 1: Application Timeline -->
+                <div>
+                    <h2 class="section-title">Application Timeline & Status</h2>
+                    <div class="card">
+                        <div class="timeline-container">
+                            
+                            <div class="timeline-item">
+                                <div class="timeline-icon" style="background-color: var(--color-warning);"><i class="fas fa-hourglass-half"></i></div>
+                                <div class="timeline-content" style="border-left-color: var(--color-warning);">
+                                    <div class="timeline-date">3 days ago</div>
+                                    <div class="timeline-title">Frontend Intern - Flipkart</div>
+                                    <div class="timeline-status text-sm text-yellow-700 font-semibold">Status: Waiting for Mentor Approval</div>
+                                </div>
+                            </div>
+
+                            <div class="timeline-item">
+                                <div class="timeline-icon" style="background-color: var(--color-secondary);"><i class="fas fa-user-tie"></i></div>
+                                <div class="timeline-content" style="border-left-color: var(--color-secondary);">
+                                    <div class="timeline-date">1 week ago</div>
+                                    <div class="timeline-title">Software Engineer - Microsoft</div>
+                                    <div class="timeline-status text-sm text-blue-700 font-semibold">Status: Shortlisted for Technical Interview (Round 1)</div>
+                                </div>
+                            </div>
+
+                            <div class="timeline-item">
+                                <div class="timeline-icon"><i class="fas fa-check"></i></div>
+                                <div class="timeline-content">
+                                    <div class="timeline-date">2 weeks ago</div>
+                                    <div class="timeline-title">Cloud Developer - AWS</div>
+                                    <div class="timeline-status text-sm text-green-700 font-semibold">Status: Mentor Verified & Forwarded to Company</div>
+                                </div>
+                            </div>
+                            
+                            <div class="timeline-item">
+                                <div class="timeline-icon" style="background-color: var(--color-danger);"><i class="fas fa-times"></i></div>
+                                <div class="timeline-content" style="border-left-color: var(--color-danger);">
+                                    <div class="timeline-date">1 month ago</div>
+                                    <div class="timeline-title">Data Analyst - PwC</div>
+                                    <div class="timeline-status text-sm text-red-700 font-semibold">Status: Rejected - Low GPA (7.5 req, your 7.2)</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Column 2: Notifications -->
+                <div>
+                    <h2 class="section-title">Critical Notifications</h2>
+                    <div class="card">
+                        <ul class="notification-list">
+                            <li class="notification-item">
+                                <div class="notif-icon text-red-500"><i class="fas fa-exclamation-triangle"></i></div>
+                                <div class="notif-content">
+                                    <h4>Action Required: Missing Document</h4>
+                                    <p>Your latest internship application is missing the **Letter of Intent**. Please upload it by tomorrow.</p>
+                                    <div class="notif-date">2 hours ago</div>
+                                </div>
+                            </li>
+                            <li class="notification-item">
+                                <div class="notif-icon text-blue-500"><i class="fas fa-user-shield"></i></div>
+                                <div class="notif-content">
+                                    <h4>Mentor Review Complete</h4>
+                                    <p>Your profile has been reviewed by your mentor, Dr. Richa. Ready for submission!</p>
+                                    <div class="notif-date">Yesterday</div>
+                                </div>
+                            </li>
+                            <li class="notification-item">
+                                <div class="notif-icon text-green-500"><i class="fas fa-bullhorn"></i></div>
+                                <div class="notif-content">
+                                    <h4>New Opportunities Posted</h4>
+                                    <p>12 new roles matching your **Full Stack** preference are available. Check the opportunities tab.</p>
+                                    <div class="notif-date">3 days ago</div>
+                                </div>
+                            </li>
+                            <li class="notification-item">
+                                <div class="notif-icon text-yellow-500"><i class="fas fa-calendar-alt"></i></div>
+                                <div class="notif-content">
+                                    <h4>Interview Scheduled</h4>
+                                    <p>Your technical interview with **Microsoft** is scheduled for **Monday at 10:00 AM**.</p>
+                                    <div class="notif-date">5 days ago</div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript for Dynamic Interactions (Mock) -->
+    <script>
+        // Mock function to show an action button click
+        function showNotification(message) {
+            console.log(message);
+            // In a real app, this would show a small toast or modal
+            alert(message); // Using alert() temporarily for canvas display, though generally discouraged.
+        }
+    </script>
+</body>
+</html>
