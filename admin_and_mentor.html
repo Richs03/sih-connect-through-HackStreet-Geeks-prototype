@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connect | Admin & Mentor Portal</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --color-primary: #3B82F6; /* Blue-500 */
+            --color-secondary: #F59E0B; /* Amber-500 */
+            --color-success: #10B981; /* Emerald-500 */
+            --color-danger: #EF4444; /* Red-500 */
+            --color-pending: #F59E0B; /* Warning color */
+            --color-info: #6366F1; /* Indigo-500 */
+            --color-subtle: #6B7280; /* Gray-500 */
+            --bg-dark: #1F2937;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F3F4F6;
+            min-height: 100vh;
+            color: #1F2937;
+        }
+
+        /* Layout */
+        .dashboard-container {
+            display: flex;
+            min-height: 100vh;
+            max-width: 1400px;
+            margin: 0 auto;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            border-radius: 1rem;
+            overflow: hidden;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background-color: #FFFFFF;
+            padding: 2rem 1.5rem;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid #E5E7EB;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--color-primary);
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .user-profile {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-bottom: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid #F3F4F6;
+        }
+
+        .avatar {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            margin-bottom: 0.75rem;
+            border: 3px solid var(--color-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #DBEAFE; /* Light primary color */
+            color: var(--color-primary);
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        .username {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .user-role {
+            font-size: 0.85rem;
+            color: #6B7280;
+        }
+        
+        /* Role Toggles for Admins */
+        .role-toggles {
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid #E5E7EB;
+            padding-bottom: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        .role-btn {
+            padding: 0.6rem 1rem;
+            border-radius: 0.5rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #3B82F6;
+            background-color: #EFF6FF;
+            transition: all 0.2s;
+            cursor: pointer;
+            text-align: center;
+        }
+        .role-btn.active {
+            background-color: var(--color-primary);
+            color: white;
+            box-shadow: 0 4px 6px rgba(59, 130, 246, 0.3);
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            margin-bottom: 0.5rem;
+            border-radius: 0.75rem;
+            color: #1F2937;
+            text-decoration: none;
+            transition: background-color 0.2s, color 0.2s;
+            font-weight: 500;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            background-color: var(--color-primary);
+            color: #FFFFFF;
+        }
+
+        .nav-item i {
+            margin-right: 0.75rem;
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex-grow: 1;
+            padding: 2rem;
+            background-color: #F4F4F9;
+        }
+        
+        .main-content > div:not(.header-bar) {
+            transition: opacity 0.3s ease;
+        }
+
+        .header-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #E5E7EB;
+        }
+
+        .header-bar h1 {
+            font-size: 1.75rem;
+            font-weight: 700;
+        }
+
+        /* Cards Grid */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .card {
+            background-color: #FFFFFF;
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            transition: transform 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            border-bottom: 1px dashed #E5E7EB;
+            padding-bottom: 0.5rem;
+            color: var(--color-primary);
+        }
+
+        /* Applicant List */
+        .applicant-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 0;
+            border-bottom: 1px solid #F3F4F6;
+        }
+        .applicant-item:last-child {
+            border-bottom: none;
+        }
+
+        .applicant-info {
+            display: flex;
+            flex-direction: column;
+        }
+        .applicant-name {
+            font-weight: 600;
+            font-size: 1rem;
+        }
+        .applicant-detail {
+            font-size: 0.85rem;
+            color: var(--color-subtle);
+            margin-top: 0.25rem;
+        }
+        .applicant-score {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--color-success);
+            padding: 0 1rem;
+        }
+        .applicant-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        .action-btn {
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: background-color 0.2s;
+        }
+        .btn-approve {
+            background-color: var(--color-success);
+            color: white;
+            border: 1px solid var(--color-success);
+        }
+        .btn-reject {
+            background-color: var(--color-danger);
+            color: white;
+            border: 1px solid var(--color-danger);
+        }
+        .btn-approve:hover { background-color: #059669; }
+        .btn-reject:hover { background-color: #B91C1C; }
+        .btn-shortlist {
+            background-color: var(--color-info);
+            color: white;
+            width: 100%;
+            margin-top: 1rem;
+        }
+
+        /* Form Styling (Employer View) */
+        .input-group {
+            margin-bottom: 1rem;
+        }
+        .input-group label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+        .input-group input, .input-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #D1D5DB;
+            border-radius: 0.5rem;
+            transition: border-color 0.2s;
+        }
+        .input-group input:focus, .input-group textarea:focus {
+            border-color: var(--color-primary);
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+        }
+        .btn-post-job {
+            background-color: var(--color-secondary);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 700;
+            transition: background-color 0.2s;
+        }
+        .btn-post-job:hover { background-color: #D97706; }
+        
+        /* Utility */
+        .hidden {
+            display: none;
+        }
+
+        /* Modal Styling */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none; /* Controlled by JS */
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 1rem;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+        .modal-content h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--color-primary);
+            margin-bottom: 1rem;
+        }
+        .modal-content p {
+            color: var(--color-subtle);
+            margin-bottom: 1.5rem;
+        }
+        .modal-close-btn {
+            background-color: var(--color-primary);
+            color: white;
+            padding: 0.5rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+        }
+        .modal-close-btn:hover { background-color: #3B82F6; }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .dashboard-container {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                padding: 1rem;
+                flex-direction: column; /* Stack vertically for mobile */
+                border-right: none;
+                border-bottom: 1px solid #E5E7EB;
+            }
+            .user-profile, .nav-menu {
+                display: none; /* Hide for simplicity */
+            }
+            .main-content {
+                padding: 1rem;
+            }
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
+            .header-bar {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .role-toggles {
+                flex-direction: row;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="logo">Connect Through Geeks</div>
+
+            <!-- Profile Block (Dynamic User) -->
+            <div class="user-profile">
+                <div class="avatar" id="user-avatar">A</div>
+                <div class="username" id="user-name">Admin User</div>
+                <div class="user-role" id="current-role">Loading Role...</div>
+            </div>
+            
+            <!-- Role Toggles (Shown to all admins/mentors for internal navigation) -->
+            <div class="role-toggles">
+                <div id="mentor-toggle" class="role-btn" onclick="handleRoleToggle('mentor')">Mentor View</div>
+                <div id="admin-toggle" class="role-btn" onclick="handleRoleToggle('admin')">Placement Cell View</div>
+                <div id="employer-toggle" class="role-btn" onclick="handleRoleToggle('employer')">Employer View</div>
+            </div>
+
+            <!-- Navigation Menu -->
+            <div class="nav-menu">
+                <a href="#" class="nav-item active"><i class="fas fa-chart-line"></i> Dashboard</a>
+                <a href="#" class="nav-item"><i class="fas fa-users-cog"></i> User Management</a>
+                <a href="#" class="nav-item"><i class="fas fa-database"></i> Data Analytics</a>
+                <a href="#" class="nav-item"><i class="fas fa-cogs"></i> System Settings</a>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="header-bar">
+                <h1 id="portal-title">Administrative Portal</h1>
+                <a href="login.html" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg text-sm transition shadow-md">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
+            </div>
+
+            <!-- --------------------------------- -->
+            <!-- MENTOR VIEW: Application Approval -->
+            <!-- --------------------------------- -->
+            <div id="mentor-view" class="active-view">
+                <div class="cards-grid">
+                    <!-- Card 1: Pending Applications -->
+                    <div class="card md:col-span-2">
+                        <h2 class="card-title" id="pending-count"><i class="fas fa-clipboard-list mr-2"></i> Pending Applications (3)</h2>
+                        
+                        <!-- Applicant Item 1 -->
+                        <div class="applicant-item" data-id="1001">
+                            <div class="applicant-info">
+                                <span class="applicant-name">Richa Sharma</span>
+                                <span class="applicant-detail">Full Stack Role | Score: <span class="text-green-600 font-semibold">92%</span></span>
+                            </div>
+                            <span class="applicant-score">92%</span>
+                            <div class="applicant-actions">
+                                <button class="action-btn btn-approve" onclick="applyAction('1001', 'approve')"><i class="fas fa-check"></i> Approve</button>
+                                <button class="action-btn btn-reject" onclick="applyAction('1001', 'reject')"><i class="fas fa-times"></i> Reject</button>
+                            </div>
+                        </div>
+
+                        <!-- Applicant Item 2 -->
+                        <div class="applicant-item" data-id="1002">
+                            <div class="applicant-info">
+                                <span class="applicant-name">Arjun Singh</span>
+                                <span class="applicant-detail">Data Science Role | Score: <span class="text-yellow-600 font-semibold">78%</span></span>
+                            </div>
+                            <span class="applicant-score" style="color: var(--color-pending);">78%</span>
+                            <div class="applicant-actions">
+                                <button class="action-btn btn-approve" onclick="applyAction('1002', 'approve')"><i class="fas fa-check"></i> Approve</button>
+                                <button class="action-btn btn-reject" onclick="applyAction('1002', 'reject')"><i class="fas fa-times"></i> Reject</button>
+                            </div>
+                        </div>
+
+                        <!-- Applicant Item 3 -->
+                        <div class="applicant-item" data-id="1003">
+                            <div class="applicant-info">
+                                <span class="applicant-name">Priya Patel</span>
+                                <span class="applicant-detail">Cloud Engineer Role | Score: <span class="text-red-600 font-semibold">61%</span></span>
+                            </div>
+                            <span class="applicant-score" style="color: var(--color-danger);">61%</span>
+                            <div class="applicant-actions">
+                                <button class="action-btn btn-approve" onclick="applyAction('1003', 'approve')"><i class="fas fa-check"></i> Approve</button>
+                                <button class="action-btn btn-reject" onclick="applyAction('1003', 'reject')"><i class="fas fa-times"></i> Reject</button>
+                            </div>
+                        </div>
+
+                        <button class="action-btn btn-shortlist mt-4 hover:bg-indigo-700 transition">View Full Profiles & Shortlist Candidates</button>
+                    </div>
+
+                    <!-- Card 2: Student Mentorship Matching -->
+                    <div class="card">
+                        <h2 class="card-title"><i class="fas fa-user-friends mr-2"></i> Mentorship Queue (12)</h2>
+                        <p class="text-sm text-gray-600 mb-4">Students awaiting a mentor match based on skill gaps.</p>
+                        
+                        <ul class="space-y-3">
+                            <li class="flex justify-between items-center text-sm">
+                                <span>Kiran Varma (DevOps Gap)</span>
+                                <span class="text-blue-500 font-semibold cursor-pointer hover:underline">Match Now</span>
+                            </li>
+                            <li class="flex justify-between items-center text-sm">
+                                <span>Deepak Jain (Cloud Gap)</span>
+                                <span class="text-blue-500 font-semibold cursor-pointer hover:underline">Match Now</span>
+                            </li>
+                            <li class="flex justify-between items-center text-sm">
+                                <span>Sanya Rao (React Gap)</span>
+                                <span class="text-blue-500 font-semibold cursor-pointer hover:underline">Match Now</span>
+                            </li>
+                        </ul>
+                        <button class="action-btn bg-gray-200 text-gray-700 mt-4 w-full hover:bg-gray-300 transition">View All Matches</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- --------------------------------- -->
+            <!-- PLACEMENT CELL VIEW (ADMIN VIEW) -->
+            <!-- --------------------------------- -->
+            <div id="admin-view" class="hidden">
+                <div class="cards-grid">
+                    <!-- Card 1: Job Posting (Simulated) -->
+                    <div class="card md:col-span-2">
+                        <h2 class="card-title text-amber-500"><i class="fas fa-paper-plane mr-2"></i> Post New Job Opportunity</h2>
+                        <form onsubmit="event.preventDefault(); simulateJobPost();" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="input-group">
+                                <label for="company">Company Name</label>
+                                <input type="text" id="company" placeholder="e.g., Google India" required>
+                            </div>
+                            <div class="input-group">
+                                <label for="role">Job Role</label>
+                                <input type="text" id="role" placeholder="e.g., Software Engineer I" required>
+                            </div>
+                            <div class="input-group col-span-full">
+                                <label for="description">Job Description (Key Skills & Requirements)</label>
+                                <textarea id="description" rows="3" placeholder="Require strong Python, SQL, and 2+ years experience..."></textarea>
+                            </div>
+                            <div class="input-group col-span-full">
+                                <label for="eligibility">Eligibility Filters (Min Score, GPA)</label>
+                                <input type="text" id="eligibility" value="Min Score 75% | GPA 3.0+">
+                            </div>
+                            <button type="submit" class="btn-post-job col-span-full hover:bg-amber-600 transition">
+                                Post Opportunity & Auto-Match Students
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Card 2: Platform Analytics Summary -->
+                    <div class="card">
+                        <h2 class="card-title text-amber-500"><i class="fas fa-chart-bar mr-2"></i> Platform Analytics</h2>
+                        <ul class="space-y-3">
+                            <li class="flex justify-between items-center">
+                                <span class="text-gray-600">Total Active Students:</span>
+                                <span class="font-bold text-lg text-gray-800">4,521</span>
+                            </li>
+                            <li class="flex justify-between items-center">
+                                <span class="text-gray-600">Jobs Posted Last 30 Days:</span>
+                                <span class="font-bold text-lg text-gray-800">58</span>
+                            </li>
+                            <li class="flex justify-between items-center">
+                                <span class="text-gray-600">Average Placement Score:</span>
+                                <span class="font-bold text-lg text-emerald-600">82.5%</span>
+                            </li>
+                            <li class="flex justify-between items-center">
+                                <span class="text-gray-600">Open Mentorship Needs:</span>
+                                <span class="font-bold text-lg text-red-600">125</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- --------------------------------- -->
+            <!-- EMPLOYER VIEW -->
+            <!-- --------------------------------- -->
+            <div id="employer-view" class="hidden">
+                <div class="cards-grid">
+                    <!-- Card 1: View Posted Opportunities -->
+                    <div class="card md:col-span-2">
+                        <h2 class="card-title text-purple-600"><i class="fas fa-bullhorn mr-2"></i> Your Active Job Postings (2)</h2>
+                        <ul class="space-y-4">
+                            <li class="p-3 border rounded-lg flex justify-between items-center bg-purple-50">
+                                <div>
+                                    <p class="font-semibold text-gray-800">1. Data Analyst - Entry Level</p>
+                                    <p class="text-sm text-gray-500">Posted 5 days ago | 14 Candidates Matched</p>
+                                </div>
+                                <div class="space-x-2">
+                                    <button class="action-btn bg-purple-200 text-purple-800 hover:bg-purple-300">View Applicants</button>
+                                    <button class="action-btn bg-red-100 text-red-800 hover:bg-red-200">Close Post</button>
+                                </div>
+                            </li>
+                            <li class="p-3 border rounded-lg flex justify-between items-center bg-purple-50">
+                                <div>
+                                    <p class="font-semibold text-gray-800">2. Senior UX Designer</p>
+                                    <p class="text-sm text-gray-500">Posted 2 months ago | 3 Candidates Matched</p>
+                                </div>
+                                <div class="space-x-2">
+                                    <button class="action-btn bg-purple-200 text-purple-800 hover:bg-purple-300">View Applicants</button>
+                                    <button class="action-btn bg-red-100 text-red-800 hover:bg-red-200">Close Post</button>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <!-- Card 2: Quick Actions -->
+                    <div class="card">
+                        <h2 class="card-title text-purple-600"><i class="fas fa-bolt mr-2"></i> Quick Actions</h2>
+                        <div class="flex flex-col space-y-3">
+                            <button class="action-btn bg-indigo-100 text-indigo-700 hover:bg-indigo-200 p-3 rounded-lg font-semibold">
+                                <i class="fas fa-plus-circle mr-2"></i> Post New Job
+                            </button>
+                            <button class="action-btn bg-indigo-100 text-indigo-700 hover:bg-indigo-200 p-3 rounded-lg font-semibold">
+                                <i class="fas fa-calendar-alt mr-2"></i> Schedule Interviews
+                            </button>
+                            <button class="action-btn bg-indigo-100 text-indigo-700 hover:bg-indigo-200 p-3 rounded-lg font-semibold">
+                                <i class="fas fa-file-export mr-2"></i> Export Candidate Data
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Custom Modal for Notifications (Replaces alert()) -->
+    <div id="custom-modal" class="modal">
+        <div class="modal-content">
+            <h3 id="modal-title">Action Successful</h3>
+            <p id="modal-message">The action was completed successfully.</p>
+            <button class="modal-close-btn" onclick="closeModal()">Close</button>
+        </div>
+    </div>
+
+    <!-- JavaScript for Dynamic Interactions and Routing -->
+    <script>
+
+        // --- Role Toggling Logic ---
+        function handleRoleToggle(role) {
+            // 1. Hide all views and deactivate all buttons
+            const views = document.querySelectorAll('.main-content > div:not(.header-bar)');
+            views.forEach(view => {
+                view.classList.add('hidden');
+                view.classList.remove('active-view');
+            });
+
+            const buttons = document.querySelectorAll('.role-toggles .role-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+
+            // 2. Show the selected view, activate the selected button, and update titles
+            let title = "Administrative Portal";
+            let roleDisplay = "Admin User";
+            let viewId = "";
+            let toggleId = "";
+            
+            // Map roles to view IDs and set titles
+            if (role === 'mentor') {
+                viewId = 'mentor-view';
+                toggleId = 'mentor-toggle';
+                title = "Mentor Approval Portal";
+                roleDisplay = "Mentor (High Access)";
+            } else if (role === 'admin') {
+                // 'admin' key is used for the Placement Cell view
+                viewId = 'admin-view';
+                toggleId = 'admin-toggle';
+                title = "Placement Cell Management";
+                roleDisplay = "Placement Cell (Admin)";
+            } else if (role === 'employer') {
+                viewId = 'employer-view';
+                toggleId = 'employer-toggle';
+                title = "Employer Opportunities Management";
+                roleDisplay = "Employer (Business Access)";
+            } else {
+                console.error("Unknown role key passed to handleRoleToggle:", role);
+                return;
+            }
+
+            // Apply changes
+            const viewElement = document.getElementById(viewId);
+            const toggleElement = document.getElementById(toggleId);
+
+            if (viewElement) {
+                viewElement.classList.remove('hidden');
+                viewElement.classList.add('active-view');
+            }
+            if (toggleElement) {
+                toggleElement.classList.add('active');
+            }
+            
+            document.getElementById('portal-title').textContent = title;
+            document.getElementById('current-role').textContent = roleDisplay;
+        }
+
+        // --- Application Action Mock Logic ---
+        function applyAction(id, action) {
+            const item = document.querySelector(`.applicant-item[data-id="${id}"]`);
+            if (item) {
+                item.remove(); // Simulate removal from queue
+
+                // Update the pending count
+                const countElement = document.getElementById('pending-count');
+                let currentCountMatch = countElement.textContent.match(/\((\d+)\)/);
+                let currentCount = 0;
+                if (currentCountMatch && currentCountMatch[1]) {
+                    currentCount = parseInt(currentCountMatch[1]);
+                }
+
+                currentCount--;
+                countElement.textContent = `Pending Applications (${currentCount})`;
+                
+                showModal('Application ' + (action === 'approve' ? 'Approved' : 'Rejected'), 
+                         `Application ID ${id} was ${action}d and moved to the next queue.`);
+            }
+        }
+
+        function simulateJobPost() {
+            const company = document.getElementById('company').value;
+            const role = document.getElementById('role').value;
+            
+            // Simple form validation check
+            if (!company || !role) {
+                showModal('Error', 'Please fill in the Company Name and Job Role before posting.');
+                return;
+            }
+
+            showModal('Opportunity Posted', `The opportunity for '${role}' at ${company} has been posted and filtered to eligible students.`);
+        }
+
+        // --- Modal Functions ---
+        let modal = document.getElementById('custom-modal');
+        let modalTitle = document.getElementById('modal-title');
+        let modalMessage = document.getElementById('modal-message');
+
+        function showModal(title, message) {
+            modalTitle.textContent = title;
+            modalMessage.textContent = message;
+            modal.style.display = 'flex';
+        }
+
+        function closeModal() {
+            modal.style.display = 'none';
+        }
+        
+        // --- Role Routing and Initialization Logic (NEW) ---
+        document.addEventListener('DOMContentLoaded', () => {
+            // 1. Get the role from the URL query parameters (passed by router.html)
+            const urlParams = new URLSearchParams(window.location.search);
+            const userRole = urlParams.get('role');
+
+            console.log('Detected Role from URL:', userRole);
+
+            if (!userRole) {
+                // No role found in URL, redirect to login as a safe fallback
+                console.warn('Role parameter missing. Redirecting to login.');
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // 2. Redirect students away (they belong on index.html)
+            if (userRole === 'student') {
+                console.log('Role is student. Redirecting to student dashboard.');
+                window.location.href = 'index.html?role=student';
+                return;
+            }
+            
+            // 3. Determine the internal view key and call the toggle function
+            let viewKey = userRole; 
+
+            // Special mapping for Placement Cell to the internal 'admin' view key
+            if (userRole === 'placement_cell') {
+                viewKey = 'admin';
+            }
+            // If the role is 'mentor' or 'employer', the viewKey remains the same.
+
+            console.log(`Initializing dashboard view for role: ${userRole} (View Key: ${viewKey})`);
+            
+            // Call the existing function to show the correct view
+            handleRoleToggle(viewKey);
+        });
+
+    </script>
+</body>
+</html>

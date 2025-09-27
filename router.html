@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connecting...</title>
+    <!-- Tailwind CSS CDN for minimal styling while loading -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F3F4F6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: #1F2937;
+        }
+        .loading-box {
+            background-color: white;
+            padding: 3rem 4rem;
+            border-radius: 1rem;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="loading-box">
+        <div class="text-3xl font-bold mb-3 text-emerald-600">Connecting to Portal...</div>
+        <p class="text-gray-600">Please wait while we determine your access level.</p>
+        <!-- Simple loading bar -->
+        <div class="mt-6 w-full bg-gray-200 rounded-full h-2.5">
+            <div class="bg-emerald-500 h-2.5 rounded-full animate-pulse" style="width: 100%"></div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // 1. Retrieve the user role saved during login from sessionStorage
+            const userRole = sessionStorage.getItem('userRole');
+
+            if (!userRole) {
+                // If no role is found, something went wrong, send them back to login
+                console.error("No user role found. Redirecting to login.");
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // 2. Define the mapping for roles to dashboard files
+            let destinationFile;
+            let roleParameter = userRole; // Use the stored role as the parameter
+
+            // Student is the only role that uses index.html (the student dashboard)
+            if (userRole === 'student') {
+                destinationFile = 'index.html';
+            } else if (userRole === 'mentor' || userRole === 'placement_cell' || userRole === 'employer') {
+                // All other administrative/business roles go to admin_and_mentor.html
+                destinationFile = 'admin_and_mentor.html';
+            } else {
+                // Fallback for an unknown role, just in case
+                console.warn(`Unknown role: ${userRole}. Defaulting to login.`);
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // 3. Redirect to the destination file with the role as a query parameter
+            // Example: index.html?role=student OR admin_and_mentor.html?role=mentor
+            window.location.href = `${destinationFile}?role=${roleParameter}`;
+        });
+    </script>
+</body>
+</html>
