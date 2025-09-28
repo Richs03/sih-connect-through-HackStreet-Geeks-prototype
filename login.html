@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connect | Unified Login</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F3F4F6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .login-container {
+            max-width: 480px;
+            width: 90%;
+            background-color: #ffffff;
+            border-radius: 1rem;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            padding: 2.5rem;
+        }
+        /* Style for the selected role radio button */
+        .role-selector input[type="radio"]:checked + label {
+            background-color: #3B82F6; /* Blue-500 */
+            color: white;
+            border-color: #3B82F6;
+        }
+        /* Style for unselected role radio button label */
+        .role-selector label {
+            transition: all 0.2s;
+            cursor: pointer;
+            border: 1px solid #D1D5DB; /* Gray-300 */
+            background-color: #F9FAFB; /* Gray-50 */
+        }
+
+        /* Modal styling */
+        .modal {
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+        .modal-content {
+            animation: fadeIn 0.3s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-container">
+        <!-- Header -->
+        <h1 class="text-4xl font-extrabold text-center mb-2 text-blue-600">StepAhead</h1>
+        <p class="text-center text-gray-500 mb-8">Unified Login Portal</p>
+
+        <!-- Login Form -->
+        <form id="login-form" onsubmit="handleLogin(event)">
+            <div class="mb-5">
+                <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
+                <input type="email" id="email" name="email" placeholder="richa.patel@example.com" required
+                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 transition duration-150">
+            </div>
+
+            <div class="mb-6">
+                <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                <input type="password" id="password" name="password" value="demo" required
+                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 transition duration-150">
+            </div>
+
+            <!-- Role Selection -->
+            <div class="mb-8">
+                <p class="text-sm font-medium text-gray-700 mb-2">Select Your Role:</p>
+                <div class="role-selector grid grid-cols-2 sm:grid-cols-4 gap-2">
+                    
+                    <!-- Student -->
+                    <input type="radio" id="role-student" name="user_role" value="student" class="hidden" checked>
+                    <label for="role-student" class="px-3 py-2 text-center text-sm font-semibold rounded-lg">Student</label>
+                    
+                    <!-- Mentor -->
+                    <input type="radio" id="role-mentor" name="user_role" value="mentor" class="hidden">
+                    <label for="role-mentor" class="px-3 py-2 text-center text-sm font-semibold rounded-lg">Mentor</label>
+                    
+                    <!-- Placement Cell -->
+                    <input type="radio" id="role-placement" name="user_role" value="placement_cell" class="hidden">
+                    <label for="role-placement" class="px-3 py-2 text-center text-sm font-semibold rounded-lg">P-Cell</label>
+                    
+                    <!-- Employer -->
+                    <input type="radio" id="role-employer" name="user_role" value="employer" class="hidden">
+                    <label for="role-employer" class="px-3 py-2 text-center text-sm font-semibold rounded-lg">Employer</label>
+                </div>
+            </div>
+
+            <button type="submit"
+                    class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg transition duration-200 shadow-md hover:shadow-lg focus:outline-none focus:ring-4 focus:ring-blue-500 focus:ring-opacity-50">
+                Log In
+            </button>
+        </form>
+
+        <p class="text-center text-sm text-gray-400 mt-6">
+            <a href="#" class="hover:text-blue-500 transition">Forgot Password?</a>
+        </p>
+
+    </div>
+
+    <!-- Custom Modal for Messages (replaces alert/confirm) -->
+    <div id="custom-modal" class="modal hidden fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div class="modal-content bg-white rounded-xl shadow-2xl max-w-sm w-full p-6 transform">
+            <h3 id="modal-title" class="text-xl font-bold mb-3 text-gray-800">Title</h3>
+            <p id="modal-message" class="text-gray-600 mb-6"></p>
+            <div class="flex justify-end">
+                <button onclick="closeModal()"
+                        class="px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition">
+                    OK
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        /**
+         * Custom Modal Functions
+         */
+        function showModal(title, message) {
+            const modal = document.getElementById('custom-modal');
+            document.getElementById('modal-title').textContent = title;
+            // Use innerHTML to allow for bold markdown formatting in the message
+            document.getElementById('modal-message').innerHTML = message; 
+            modal.classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('custom-modal').classList.add('hidden');
+        }
+
+        /**
+         * Handles the login process, mock-authenticates, stores the role, and
+         * redirects to the welcome.html page.
+         */
+        function handleLogin(event) {
+            event.preventDefault(); // Prevent default form submission
+
+            const form = document.getElementById('login-form');
+            const email = form.email.value;
+            const password = form.password.value;
+            
+            // Get the selected role from the radio buttons
+            const selectedRole = document.querySelector('input[name="user_role"]:checked').value;
+
+            // Simple mock authentication (check if fields are filled)
+            if (!email || !password) {
+                showModal('Validation Error', 'Please enter both email and password.');
+                return;
+            }
+
+            // Mock success: Store the selected role
+            sessionStorage.setItem('userRole', selectedRole);
+
+            showModal('Login Successful!', `You are logging in as a **${formatRole(selectedRole)}**. Redirecting to the portal...`);
+
+            // --- REDIRECTS TO THE NEW WELCOME PAGE ---
+            setTimeout(() => {
+                window.location.href = 'welcome.html'; 
+            }, 1000);
+        }
+
+        /**
+         * Utility to format the role string for display (e.g., 'placement_cell' -> 'Placement Cell').
+         */
+        function formatRole(role) {
+            return role.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+        }
+    </script>
+</body>
+</html>

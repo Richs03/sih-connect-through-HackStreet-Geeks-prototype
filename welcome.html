@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to StepAhead</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F3F4F6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .welcome-card {
+            max-width: 600px;
+            width: 90%;
+            background-color: #ffffff;
+            border-radius: 1.5rem;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            padding: 3rem 2rem;
+            text-align: center;
+            /* Simple entrance animation */
+            animation: slideIn 0.8s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="welcome-card">
+        <!-- Icon: Handshake or other welcoming symbol -->
+        <div class="text-6xl text-blue-500 mb-6 animate-pulse">
+            <i class="fas fa-handshake"></i>
+        </div>
+        
+        <h1 class="text-4xl font-extrabold text-gray-900 mb-4">
+            Welcome to <span class="text-blue-600">StepAhead!</span>
+        </h1>
+        
+        <p id="welcome-message" class="text-xl text-gray-600 mb-8 font-medium">
+            <!-- Personalized welcome message will be inserted here by JavaScript -->
+        </p>
+        
+        <button onclick="proceedToDashboard()"
+                class="px-8 py-3 bg-blue-600 text-white font-bold text-lg rounded-full shadow-lg hover:bg-blue-700 transition duration-300 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-500 focus:ring-opacity-50">
+            Proceed to Dashboard <i class="fas fa-arrow-right ml-2"></i>
+        </button>
+    </div>
+
+    <!-- Font Awesome for Icons -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/js/all.min.js"></script>
+
+    <script>
+        /**
+         * Utility to format the role string for display 
+         * (e.g., 'placement_cell' -> 'Placement Cell').
+         */
+        function formatRole(role) {
+            return role.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+        }
+
+        /**
+         * Redirects the user to the central routing file.
+         */
+        function proceedToDashboard() {
+            // Redirects to router.html, which handles the final destination logic
+            window.location.href = 'router.html';
+        }
+
+        // --- Initialization Logic ---
+        document.addEventListener('DOMContentLoaded', () => {
+            // Get the user role that was set during login
+            const userRole = sessionStorage.getItem('userRole');
+
+            if (!userRole) {
+                // If the role isn't stored, redirect back to login
+                console.error("No user role found. Redirecting to login.");
+                window.location.href = 'login.html';
+                return;
+            }
+
+            const formattedRole = formatRole(userRole);
+            const messageElement = document.getElementById('welcome-message');
+
+            // Set the personalized message
+            messageElement.textContent = `You are successfully signed in as a ${formattedRole}. Let's get started on your career journey!`;
+
+            console.log(`Welcome screen displayed for role: ${formattedRole}`);
+        });
+    </script>
+</body>
+</html>
